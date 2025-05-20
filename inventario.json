@@ -1,0 +1,18 @@
+{
+    "Boneca Abalabu": {
+        "quantidade": 13,
+        "imagem": "boneca.png"
+    },
+    "Girafa Celeste": {
+        "quantidade": 14,
+        "imagem": "girafa.png"
+    },
+    "Frigo Camelo": {
+        "quantidade": 5,
+        "imagem": "frigo.png"
+    },
+    "Chimpanzini Bananini": {
+        "quantidade": 3,
+        "imagem": "bananini.png"
+    }
+}
