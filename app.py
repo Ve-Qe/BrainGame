@@ -11,7 +11,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # ✅ Cria as tabelas ao carregar o app
-with app.app_context():
+@app.before_first_request
+def criar_banco_automaticamente():
     db.create_all()
 
 class Usuario(db.Model):
