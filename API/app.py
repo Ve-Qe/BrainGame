@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# Criação da aplicação Flask
 app = Flask(__name__)
 CORS(app)
 
@@ -20,11 +19,9 @@ class Usuario(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     senha_hash = db.Column(db.String(128), nullable=False)
 
-# Criar o banco automaticamente antes do primeiro request
-@app.before_first_request
-def criar_banco():
-    with app.app_context():
-        db.create_all()
+# Cria o banco de dados se ainda não existir
+with app.app_context():
+    db.create_all()
 
 # Rota de teste
 @app.route('/', methods=['GET'])
@@ -66,6 +63,5 @@ def login():
 
     return jsonify({'message': 'Login bem-sucedido'}), 200
 
-# Execução da aplicação
 if __name__ == '__main__':
     app.run(debug=True)
