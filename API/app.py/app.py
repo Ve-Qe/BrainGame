@@ -1,23 +1,28 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-CORS(app)  # Permite chamadas do seu jogo
+CORS(app)
 
-# Configuração do banco de dados
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///usuarios.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Modelo de usuário
+# ✅ Cria as tabelas ao carregar o app
+with app.app_context():
+    db.create_all()
+
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     senha_hash = db.Column(db.String(128), nullable=False)
 
-# Rota de cadastro
+@app.route('/')
+def home():
+    return "API Flask ativa e funcionando!", 200
+
 @app.route('/register', methods=['POST'])
 def register():
     data = request.json
@@ -31,10 +36,8 @@ def register():
     novo_usuario = Usuario(username=username, senha_hash=senha_hash)
     db.session.add(novo_usuario)
     db.session.commit()
-
     return jsonify({'message': 'Usuário registrado com sucesso'}), 201
 
-# Rota de login
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -42,12 +45,7 @@ def login():
     senha = data.get('senha')
 
     usuario = Usuario.query.filter_by(username=username).first()
-
     if not usuario or not check_password_hash(usuario.senha_hash, senha):
         return jsonify({'error': 'Credenciais inválidas'}), 401
 
     return jsonify({'message': 'Login bem-sucedido'}), 200
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
