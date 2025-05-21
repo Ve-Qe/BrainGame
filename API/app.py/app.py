@@ -13,7 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Inicializa o banco
 db = SQLAlchemy(app)
 
-# ✅ Garante que o banco será criado antes da primeira requisição
+# ✅ Este decorador SÓ FUNCIONA após o app ser criado
 @app.before_first_request
 def criar_banco_automaticamente():
     db.create_all()
